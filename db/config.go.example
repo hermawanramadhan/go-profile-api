@@ -1,0 +1,9 @@
+package db
+
+// db config
+const (
+	username = "root"
+	password = ""
+	dbname   = "profiles"
+	driver   = "mysql"
+)
