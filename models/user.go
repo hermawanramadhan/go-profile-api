@@ -3,6 +3,7 @@ package models
 import (
 	"customer-profile/db"
 	"customer-profile/entities"
+	"customer-profile/utils"
 
 	"gorm.io/gorm"
 )
@@ -30,4 +31,15 @@ func GetUser(userId string) (entities.User, *gorm.DB) {
 	result := db.DB.Select("users.id, users.name, users.age, RiskProfile.*").Joins("RiskProfile").First(&user, userId)
 
 	return user, result
+}
+
+func UserPasswordCheck(name, password string) (entities.User, bool) {
+	var user entities.User
+	db.DB.Where("name = ?", name).First(&user)
+
+	status := utils.CheckPasswordHash(password, *user.Password)
+
+	//hide password field
+	user.Password = nil
+	return user, status
 }

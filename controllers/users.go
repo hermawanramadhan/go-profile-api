@@ -25,14 +25,22 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if user.Name == "" {
-		utils.JsonResponse(w, http.StatusBadRequest, "Bad request: name field required")
+		utils.JsonErrorResponse(w, http.StatusBadRequest, "Bad request: name field required")
 		return
 	}
 
 	if user.Age <= 0 {
-		utils.JsonResponse(w, http.StatusBadRequest, "Bad request: invalid age")
+		utils.JsonErrorResponse(w, http.StatusBadRequest, "Bad request: invalid age")
 		return
 	}
+
+	if *user.Password == "" {
+		utils.JsonResponse(w, http.StatusBadRequest, "Bad request: password field required")
+		return
+	}
+
+	password_hashed, _ := utils.HashPassword(*user.Password)
+	user.Password = &password_hashed
 
 	var riskProfile entities.RiskProfile
 	if user.Age >= 30 {
@@ -55,6 +63,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//hide password
+	user.Password = nil
 	utils.JsonSuccessResponse(w, user, "Success create user")
 
 }
@@ -71,7 +81,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	if page != "" {
 		pageInt, err = strconv.Atoi(page)
 		if err != nil {
-			utils.JsonResponse(w, http.StatusBadRequest, "Bad request: invalid query parameter page ")
+			utils.JsonErrorResponse(w, http.StatusBadRequest, "Bad request: invalid query parameter page ")
 			return
 		}
 	}
@@ -79,7 +89,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	if take != "" {
 		takeInt, err = strconv.Atoi(take)
 		if err != nil {
-			utils.JsonResponse(w, http.StatusBadRequest, "Bad request: invalid query parameter take ")
+			utils.JsonErrorResponse(w, http.StatusBadRequest, "Bad request: invalid query parameter take ")
 			return
 		}
 	}

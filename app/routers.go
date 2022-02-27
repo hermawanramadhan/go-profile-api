@@ -16,5 +16,7 @@ func route() *mux.Router {
 	router.HandleFunc("/users", controllers.GetUsers).Methods("OPTIONS", "GET")
 	router.HandleFunc("/user/{id}", controllers.GetUser).Methods("OPTIONS", "GET")
 
+	router.HandleFunc("/login", controllers.Login).Methods("OPTIONS", "POST")
+
 	return router
 }
