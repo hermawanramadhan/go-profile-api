@@ -1,6 +1,7 @@
 package db
 
 import (
+	"customer-profile/config"
 	"customer-profile/entities"
 	"fmt"
 	"log"
@@ -16,13 +17,13 @@ var (
 
 func Connect() {
 
-	dsn := fmt.Sprintf("%v:%v@/%v?charset=utf8&parseTime=True", username, password, dbname)
+	dsn := fmt.Sprintf("%v:%v@/%v?charset=utf8&parseTime=True", config.DBusername, config.DBpassword, config.DBname)
 	DB, Err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if Err != nil {
 		log.Println("Database Connection failed", Err)
 	} else {
-		log.Println(fmt.Sprintf("Database connection success. connect to database: %v", dbname))
+		log.Println(fmt.Sprintf("Database connection success. connect to database: %v", config.DBname))
 	}
 
 	DBMigrate()

@@ -1,19 +1,17 @@
 package app
 
 import (
+	"customer-profile/config"
+
 	"fmt"
 	"log"
 	"net/http"
 )
 
-const (
-	port = "8080"
-)
-
 func StartApp() {
 
-	webServerMsg := fmt.Sprintf("Start development server localhost:%v", port)
+	webServerMsg := fmt.Sprintf("Start development server localhost:%v", config.Http_port)
 	log.Println(webServerMsg)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), route()))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", config.Http_port), route()))
 
 }

@@ -1,0 +1,12 @@
+package config
+
+// config
+const (
+	//web config
+	Http_port = "8011"
+
+	//db config
+	DBusername = "root"
+	DBpassword = ""
+	DBname     = "profiles"
+)
