@@ -34,8 +34,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if *user.Password == "" {
-		utils.JsonResponse(w, http.StatusBadRequest, "Bad request: password field required")
+	if user.Password == nil || *user.Password == "" {
+		utils.JsonErrorResponse(w, http.StatusBadRequest, "Bad request: password field required")
 		return
 	}
 
@@ -71,31 +71,28 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 
-	pageInt := 1
-	takeInt := 10
+	limit := 10
+	offset := 0
 
-	page := r.URL.Query().Get("page")
-	take := r.URL.Query().Get("take")
+	limitQuery := r.URL.Query().Get("limit")
+	offsetQuery := r.URL.Query().Get("offset")
 
 	var err error
-	if page != "" {
-		pageInt, err = strconv.Atoi(page)
-		if err != nil {
-			utils.JsonErrorResponse(w, http.StatusBadRequest, "Bad request: invalid query parameter page ")
+	if limitQuery != "" {
+		limit, err = strconv.Atoi(limitQuery)
+		if err != nil && limit < 0 {
+			utils.JsonErrorResponse(w, http.StatusBadRequest, "Bad request: invalid query parameter limit must be int")
 			return
 		}
 	}
 
-	if take != "" {
-		takeInt, err = strconv.Atoi(take)
-		if err != nil {
-			utils.JsonErrorResponse(w, http.StatusBadRequest, "Bad request: invalid query parameter take ")
+	if offsetQuery != "" {
+		offset, err = strconv.Atoi(offsetQuery)
+		if err != nil && offset < 0 {
+			utils.JsonErrorResponse(w, http.StatusBadRequest, "Bad request: invalid query parameter offset must be int ")
 			return
 		}
 	}
-
-	offset := (pageInt - 1) * takeInt
-	limit := takeInt
 
 	users := models.GetUsers(limit, offset)
 	utils.JsonSuccessResponse(w, users, "Success get users")

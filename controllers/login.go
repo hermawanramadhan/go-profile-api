@@ -26,7 +26,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if user.Password == nil {
-		utils.JsonErrorResponse(w, http.StatusBadRequest, "Bad request: name field required")
+		utils.JsonErrorResponse(w, http.StatusBadRequest, "Bad request: password field required")
 		return
 	}
 
