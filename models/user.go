@@ -35,11 +35,14 @@ func GetUser(userId string) (entities.User, *gorm.DB) {
 
 func UserPasswordCheck(name, password string) (entities.User, bool) {
 	var user entities.User
-	db.DB.Where("name = ?", name).First(&user)
-
+	result := db.DB.Where("name = ?", name).First(&user)
+	if result.RowsAffected == 0 {
+		return user, false
+	}
 	status := utils.CheckPasswordHash(password, *user.Password)
 
 	//hide password field
 	user.Password = nil
+
 	return user, status
 }
