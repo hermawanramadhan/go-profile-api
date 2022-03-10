@@ -35,6 +35,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if status {
 		utils.JsonSuccessResponse(w, user, "Login success")
 	} else {
-		utils.JsonErrorResponse(w, http.StatusOK, "Login failed")
+		utils.JsonErrorResponse(w, http.StatusUnauthorized, "Login failed")
 	}
 }

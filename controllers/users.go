@@ -43,10 +43,12 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	user.Password = &password_hashed
 
 	var riskProfile entities.RiskProfile
-	if user.Age >= 30 {
+
+	ageCompare := 55 - user.Age
+	if ageCompare >= 30 {
 		riskProfile.StockPercent = 72.5
 		riskProfile.BondPercent = 21.5
-	} else if user.Age >= 20 {
+	} else if ageCompare >= 20 {
 		riskProfile.StockPercent = 54.5
 		riskProfile.BondPercent = 25.5
 	} else {
